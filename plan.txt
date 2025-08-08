@@ -1,0 +1,1241 @@
+
+Note: Objects have changed outside of Terraform
+
+Terraform detected the following changes made outside of Terraform since the
+last "terraform apply" which may have affected this plan:
+
+  # module.varnish_instance.aws_instance.this has changed
+  ~ resource "aws_instance" "this" {
+        id                                   = "i-06a56d2e6b1267d08"
+      ~ public_ip                            = "34.224.28.45" -> "54.92.201.253"
+        tags                                 = {
+            "Name" = "Varnish Server"
+        }
+        # (36 unchanged attributes hidden)
+
+        # (8 unchanged blocks hidden)
+    }
+
+
+Unless you have made equivalent changes to your configuration, or ignored the
+relevant attributes using ignore_changes, the following plan may include
+actions to undo or respond to these changes.
+
+─────────────────────────────────────────────────────────────────────────────
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+  ~ update in-place
+  - destroy
+-/+ destroy and then create replacement
++/- create replacement and then destroy
+
+Terraform will perform the following actions:
+
+  # aws_db_subnet_group.magento will be created
+  + resource "aws_db_subnet_group" "magento" {
+      + arn                     = (known after apply)
+      + description             = "Managed by Terraform"
+      + id                      = (known after apply)
+      + name                    = "magento-rds-subnet-group"
+      + name_prefix             = (known after apply)
+      + region                  = "us-east-1"
+      + subnet_ids              = [
+          + "subnet-0844e1c7c0062ee6f",
+          + "subnet-0f1ba7ce386ac9cf9",
+        ]
+      + supported_network_types = (known after apply)
+      + tags                    = {
+          + "Name" = "Magento-RDS-SubnetGroup"
+        }
+      + tags_all                = {
+          + "Name" = "Magento-RDS-SubnetGroup"
+        }
+      + vpc_id                  = (known after apply)
+    }
+
+  # module.alb.aws_lb.this will be updated in-place
+  ~ resource "aws_lb" "this" {
+        id                                                           = "arn:aws:elasticloadbalancing:us-east-1:763457559801:loadbalancer/app/Magento-ALB/d0d949a23238bb2f"
+        name                                                         = "Magento-ALB"
+      ~ security_groups                                              = [
+          - "sg-0bb26111522191e4d",
+        ] -> (known after apply)
+      ~ subnets                                                      = [
+          - "subnet-07ac857e4cadec4a0",
+          - "subnet-0844e1c7c0062ee6f",
+          - "subnet-0e435f008db8b42b6",
+        ] -> (known after apply)
+      ~ tags                                                         = {
+          + "Name" = "Magento-ALB"
+        }
+      ~ tags_all                                                     = {
+          + "Name" = "Magento-ALB"
+        }
+        # (25 unchanged attributes hidden)
+
+      ~ subnet_mapping (known after apply)
+      - subnet_mapping {
+          - subnet_id            = "subnet-07ac857e4cadec4a0" -> null
+            # (4 unchanged attributes hidden)
+        }
+      - subnet_mapping {
+          - subnet_id            = "subnet-0844e1c7c0062ee6f" -> null
+            # (4 unchanged attributes hidden)
+        }
+      - subnet_mapping {
+          - subnet_id            = "subnet-0e435f008db8b42b6" -> null
+            # (4 unchanged attributes hidden)
+        }
+
+        # (2 unchanged blocks hidden)
+    }
+
+  # module.alb.aws_lb_listener.http will be updated in-place
+  ~ resource "aws_lb_listener" "http" {
+        id                                                                  = "arn:aws:elasticloadbalancing:us-east-1:763457559801:listener/app/Magento-ALB/d0d949a23238bb2f/9039dd4b17365860"
+        tags                                                                = {}
+        # (18 unchanged attributes hidden)
+
+      ~ default_action {
+          ~ target_group_arn = "arn:aws:elasticloadbalancing:us-east-1:763457559801:targetgroup/magento-varnish-tg/a2f019021d2ac10f" -> (known after apply)
+            # (2 unchanged attributes hidden)
+
+          - forward {
+              - stickiness {
+                  - duration = 3600 -> null
+                  - enabled  = false -> null
+                }
+              - target_group {
+                  - arn    = "arn:aws:elasticloadbalancing:us-east-1:763457559801:targetgroup/magento-varnish-tg/a2f019021d2ac10f" -> null
+                  - weight = 1 -> null
+                }
+            }
+        }
+    }
+
+  # module.alb.aws_lb_listener_rule.admin_rule will be updated in-place
+  ~ resource "aws_lb_listener_rule" "admin_rule" {
+        id           = "arn:aws:elasticloadbalancing:us-east-1:763457559801:listener-rule/app/Magento-ALB/d0d949a23238bb2f/9039dd4b17365860/5f8de33e3971e818"
+        tags         = {}
+        # (5 unchanged attributes hidden)
+
+      ~ action {
+          + target_group_arn = (known after apply)
+            # (2 unchanged attributes hidden)
+
+          ~ forward {
+              ~ stickiness {
+                  - duration = 3600 -> null
+                    # (1 unchanged attribute hidden)
+                }
+
+                # (1 unchanged block hidden)
+            }
+        }
+
+        # (1 unchanged block hidden)
+    }
+
+  # module.alb.aws_lb_target_group.admin will be destroyed
+  # (because aws_lb_target_group.admin is not in configuration)
+  - resource "aws_lb_target_group" "admin" {
+      - arn                               = "arn:aws:elasticloadbalancing:us-east-1:763457559801:targetgroup/magento-app-tg/9d10ed8df838f9fd" -> null
+      - arn_suffix                        = "targetgroup/magento-app-tg/9d10ed8df838f9fd" -> null
+      - deregistration_delay              = "300" -> null
+      - id                                = "arn:aws:elasticloadbalancing:us-east-1:763457559801:targetgroup/magento-app-tg/9d10ed8df838f9fd" -> null
+      - ip_address_type                   = "ipv4" -> null
+      - load_balancer_arns                = [
+          - "arn:aws:elasticloadbalancing:us-east-1:763457559801:loadbalancer/app/Magento-ALB/d0d949a23238bb2f",
+        ] -> null
+      - load_balancing_algorithm_type     = "round_robin" -> null
+      - load_balancing_anomaly_mitigation = "off" -> null
+      - load_balancing_cross_zone_enabled = "use_load_balancer_configuration" -> null
+      - name                              = "magento-app-tg" -> null
+      - port                              = 8080 -> null
+      - protocol                          = "HTTP" -> null
+      - protocol_version                  = "HTTP1" -> null
+      - region                            = "us-east-1" -> null
+      - slow_start                        = 0 -> null
+      - tags                              = {} -> null
+      - tags_all                          = {} -> null
+      - target_type                       = "instance" -> null
+      - vpc_id                            = "vpc-097b04327a4c3cbbe" -> null
+        # (1 unchanged attribute hidden)
+
+      - health_check {
+          - enabled             = true -> null
+          - healthy_threshold   = 5 -> null
+          - interval            = 30 -> null
+          - matcher             = "200" -> null
+          - path                = "/var/www/html/magento2/pub/healthcheck.html" -> null
+          - port                = "traffic-port" -> null
+          - protocol            = "HTTP" -> null
+          - timeout             = 5 -> null
+          - unhealthy_threshold = 2 -> null
+        }
+
+      - stickiness {
+          - cookie_duration = 86400 -> null
+          - enabled         = true -> null
+          - type            = "lb_cookie" -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      - target_failover {}
+
+      - target_group_health {
+          - dns_failover {
+              - minimum_healthy_targets_count      = "1" -> null
+              - minimum_healthy_targets_percentage = "off" -> null
+            }
+          - unhealthy_state_routing {
+              - minimum_healthy_targets_count      = 1 -> null
+              - minimum_healthy_targets_percentage = "off" -> null
+            }
+        }
+
+      - target_health_state {}
+    }
+
+  # module.alb.aws_lb_target_group.app_tg will be created
+  + resource "aws_lb_target_group" "app_tg" {
+      + arn                                = (known after apply)
+      + arn_suffix                         = (known after apply)
+      + connection_termination             = (known after apply)
+      + deregistration_delay               = "300"
+      + id                                 = (known after apply)
+      + ip_address_type                    = (known after apply)
+      + lambda_multi_value_headers_enabled = false
+      + load_balancer_arns                 = (known after apply)
+      + load_balancing_algorithm_type      = (known after apply)
+      + load_balancing_anomaly_mitigation  = (known after apply)
+      + load_balancing_cross_zone_enabled  = (known after apply)
+      + name                               = "magento-app-tg"
+      + name_prefix                        = (known after apply)
+      + port                               = 8080
+      + preserve_client_ip                 = (known after apply)
+      + protocol                           = "HTTP"
+      + protocol_version                   = (known after apply)
+      + proxy_protocol_v2                  = false
+      + region                             = "us-east-1"
+      + slow_start                         = 0
+      + tags_all                           = (known after apply)
+      + target_type                        = "instance"
+      + vpc_id                             = "vpc-097b04327a4c3cbbe"
+
+      + health_check {
+          + enabled             = true
+          + healthy_threshold   = 5
+          + interval            = 30
+          + matcher             = "200"
+          + path                = "/var/www/html/magento2/pub/healthcheck.html"
+          + port                = "traffic-port"
+          + protocol            = "HTTP"
+          + timeout             = 5
+          + unhealthy_threshold = 2
+        }
+
+      + stickiness (known after apply)
+
+      + target_failover (known after apply)
+
+      + target_group_health (known after apply)
+
+      + target_health_state (known after apply)
+    }
+
+  # module.alb.aws_lb_target_group.frontend will be destroyed
+  # (because aws_lb_target_group.frontend is not in configuration)
+  - resource "aws_lb_target_group" "frontend" {
+      - arn                               = "arn:aws:elasticloadbalancing:us-east-1:763457559801:targetgroup/magento-varnish-tg/a2f019021d2ac10f" -> null
+      - arn_suffix                        = "targetgroup/magento-varnish-tg/a2f019021d2ac10f" -> null
+      - deregistration_delay              = "300" -> null
+      - id                                = "arn:aws:elasticloadbalancing:us-east-1:763457559801:targetgroup/magento-varnish-tg/a2f019021d2ac10f" -> null
+      - ip_address_type                   = "ipv4" -> null
+      - load_balancer_arns                = [
+          - "arn:aws:elasticloadbalancing:us-east-1:763457559801:loadbalancer/app/Magento-ALB/d0d949a23238bb2f",
+        ] -> null
+      - load_balancing_algorithm_type     = "round_robin" -> null
+      - load_balancing_anomaly_mitigation = "off" -> null
+      - load_balancing_cross_zone_enabled = "use_load_balancer_configuration" -> null
+      - name                              = "magento-varnish-tg" -> null
+      - port                              = 80 -> null
+      - protocol                          = "HTTP" -> null
+      - protocol_version                  = "HTTP1" -> null
+      - region                            = "us-east-1" -> null
+      - slow_start                        = 0 -> null
+      - tags                              = {} -> null
+      - tags_all                          = {} -> null
+      - target_type                       = "instance" -> null
+      - vpc_id                            = "vpc-097b04327a4c3cbbe" -> null
+        # (1 unchanged attribute hidden)
+
+      - health_check {
+          - enabled             = true -> null
+          - healthy_threshold   = 5 -> null
+          - interval            = 30 -> null
+          - matcher             = "200" -> null
+          - path                = "/healthcheck.html" -> null
+          - port                = "traffic-port" -> null
+          - protocol            = "HTTP" -> null
+          - timeout             = 5 -> null
+          - unhealthy_threshold = 2 -> null
+        }
+
+      - stickiness {
+          - cookie_duration = 86400 -> null
+          - enabled         = false -> null
+          - type            = "lb_cookie" -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      - target_failover {}
+
+      - target_group_health {
+          - dns_failover {
+              - minimum_healthy_targets_count      = "1" -> null
+              - minimum_healthy_targets_percentage = "off" -> null
+            }
+          - unhealthy_state_routing {
+              - minimum_healthy_targets_count      = 1 -> null
+              - minimum_healthy_targets_percentage = "off" -> null
+            }
+        }
+
+      - target_health_state {}
+    }
+
+  # module.alb.aws_lb_target_group.varnish_tg will be created
+  + resource "aws_lb_target_group" "varnish_tg" {
+      + arn                                = (known after apply)
+      + arn_suffix                         = (known after apply)
+      + connection_termination             = (known after apply)
+      + deregistration_delay               = "300"
+      + id                                 = (known after apply)
+      + ip_address_type                    = (known after apply)
+      + lambda_multi_value_headers_enabled = false
+      + load_balancer_arns                 = (known after apply)
+      + load_balancing_algorithm_type      = (known after apply)
+      + load_balancing_anomaly_mitigation  = (known after apply)
+      + load_balancing_cross_zone_enabled  = (known after apply)
+      + name                               = "magento-varnish-tg"
+      + name_prefix                        = (known after apply)
+      + port                               = 80
+      + preserve_client_ip                 = (known after apply)
+      + protocol                           = "HTTP"
+      + protocol_version                   = (known after apply)
+      + proxy_protocol_v2                  = false
+      + region                             = "us-east-1"
+      + slow_start                         = 0
+      + tags_all                           = (known after apply)
+      + target_type                        = "instance"
+      + vpc_id                             = "vpc-097b04327a4c3cbbe"
+
+      + health_check {
+          + enabled             = true
+          + healthy_threshold   = 5
+          + interval            = 30
+          + matcher             = "200"
+          + path                = "/healthcheck.html"
+          + port                = "traffic-port"
+          + protocol            = "HTTP"
+          + timeout             = 5
+          + unhealthy_threshold = 2
+        }
+
+      + stickiness (known after apply)
+
+      + target_failover (known after apply)
+
+      + target_group_health (known after apply)
+
+      + target_health_state (known after apply)
+    }
+
+  # module.autoscaling_group.aws_autoscaling_attachment.asg_nlb_attachment will be created
+  + resource "aws_autoscaling_attachment" "asg_nlb_attachment" {
+      + autoscaling_group_name = "magento-ASG"
+      + id                     = (known after apply)
+      + lb_target_group_arn    = "arn:aws:elasticloadbalancing:us-east-1:763457559801:targetgroup/magento-app-nlb-tg/486bb5fe9f639b0d"
+      + region                 = "us-east-1"
+    }
+
+  # module.autoscaling_group.aws_autoscaling_group.this will be updated in-place
+  ~ resource "aws_autoscaling_group" "this" {
+      + force_delete                     = false
+      + force_delete_warm_pool           = false
+        id                               = "magento-ASG"
+      + ignore_failed_scaling_activities = false
+        name                             = "magento-ASG"
+      ~ vpc_zone_identifier              = [
+          - "subnet-0f1ba7ce386ac9cf9",
+            # (1 unchanged element hidden)
+        ]
+      + wait_for_capacity_timeout        = "10m"
+        # (27 unchanged attributes hidden)
+
+      ~ launch_template {
+          ~ id      = "lt-0f9bb2296618bfffe" -> (known after apply)
+            name    = "magento-app-launch-template"
+          ~ version = "2" -> (known after apply)
+        }
+
+      - tag {
+          - key                 = "Name" -> null
+          - propagate_at_launch = true -> null
+          - value               = "Magento APP" -> null
+        }
+      + tag {
+          + key                 = "Name"
+          + propagate_at_launch = true
+          + value               = "magento-ASG"
+        }
+
+        # (4 unchanged blocks hidden)
+    }
+
+  # module.bastion_instance.aws_instance.this will be updated in-place
+  ~ resource "aws_instance" "this" {
+      + force_destroy                        = false
+        id                                   = "i-05f4c1103487f3f5c"
+      ~ tags                                 = {
+            "Name" = "Bastion-Host"
+          + "Role" = "Bastion"
+        }
+      ~ tags_all                             = {
+          + "Role" = "Bastion"
+            # (1 unchanged element hidden)
+        }
+      + user_data_replace_on_change          = false
+      ~ vpc_security_group_ids               = [
+          - "sg-045371a5988ca6dab",
+        ] -> (known after apply)
+        # (35 unchanged attributes hidden)
+
+      ~ root_block_device {
+            tags                  = {}
+          ~ volume_type           = "gp2" -> "gp3"
+            # (9 unchanged attributes hidden)
+        }
+
+        # (7 unchanged blocks hidden)
+    }
+
+  # module.efs.aws_efs_file_system.this must be replaced
+-/+ resource "aws_efs_file_system" "this" {
+      ~ arn                             = "arn:aws:elasticfilesystem:us-east-1:763457559801:file-system/fs-009dec8cc4770411b" -> (known after apply)
+      + availability_zone_id            = (known after apply)
+      + availability_zone_name          = (known after apply)
+      ~ creation_token                  = "quickCreated-57f5cd13-95bb-455f-9c5c-60e179ac05fe" -> "magento-efs" # forces replacement
+      ~ dns_name                        = "fs-009dec8cc4770411b.efs.us-east-1.amazonaws.com" -> (known after apply)
+      ~ id                              = "fs-009dec8cc4770411b" -> (known after apply)
+      ~ kms_key_id                      = "arn:aws:kms:us-east-1:763457559801:key/092100bc-8680-4c0e-98d6-0b7cce00b0ff" -> (known after apply)
+      ~ name                            = "magento-efs" -> (known after apply)
+      ~ number_of_mount_targets         = 2 -> (known after apply)
+      ~ owner_id                        = "763457559801" -> (known after apply)
+      ~ performance_mode                = "generalPurpose" -> (known after apply)
+      - provisioned_throughput_in_mibps = 0 -> null
+      ~ size_in_bytes                   = [
+          - {
+              - value             = 12288
+              - value_in_ia       = 0
+              - value_in_standard = 12288
+            },
+        ] -> (known after apply)
+        tags                            = {
+            "Name" = "magento-efs"
+        }
+      ~ throughput_mode                 = "elastic" -> "bursting"
+        # (3 unchanged attributes hidden)
+
+      - lifecycle_policy {
+          - transition_to_ia                    = "AFTER_30_DAYS" -> null
+            # (2 unchanged attributes hidden)
+        }
+      - lifecycle_policy {
+          - transition_to_archive               = "AFTER_90_DAYS" -> null
+            # (2 unchanged attributes hidden)
+        }
+
+      ~ protection (known after apply)
+      - protection {
+          - replication_overwrite = "ENABLED" -> null
+        }
+    }
+
+  # module.efs.aws_efs_mount_target.private_subnet_1 must be replaced
+-/+ resource "aws_efs_mount_target" "private_subnet_1" {
+      ~ availability_zone_id   = "use1-az6" -> (known after apply)
+      ~ availability_zone_name = "us-east-1b" -> (known after apply)
+      ~ dns_name               = "fs-009dec8cc4770411b.efs.us-east-1.amazonaws.com" -> (known after apply)
+      ~ file_system_arn        = "arn:aws:elasticfilesystem:us-east-1:763457559801:file-system/fs-009dec8cc4770411b" -> (known after apply)
+      ~ file_system_id         = "fs-009dec8cc4770411b" -> (known after apply) # forces replacement
+      ~ id                     = "fsmt-044a94c3672334ae2" -> (known after apply)
+      ~ ip_address             = "10.0.2.219" -> (known after apply)
+      ~ mount_target_dns_name  = "us-east-1b.fs-009dec8cc4770411b.efs.us-east-1.amazonaws.com" -> (known after apply)
+      ~ network_interface_id   = "eni-02117b5e60fbdb5f7" -> (known after apply)
+      ~ owner_id               = "763457559801" -> (known after apply)
+        # (3 unchanged attributes hidden)
+    }
+
+  # module.efs.aws_efs_mount_target.private_subnet_2 must be replaced
+-/+ resource "aws_efs_mount_target" "private_subnet_2" {
+      ~ availability_zone_id   = "use1-az1" -> (known after apply)
+      ~ availability_zone_name = "us-east-1c" -> (known after apply)
+      ~ dns_name               = "fs-009dec8cc4770411b.efs.us-east-1.amazonaws.com" -> (known after apply)
+      ~ file_system_arn        = "arn:aws:elasticfilesystem:us-east-1:763457559801:file-system/fs-009dec8cc4770411b" -> (known after apply)
+      ~ file_system_id         = "fs-009dec8cc4770411b" -> (known after apply) # forces replacement
+      ~ id                     = "fsmt-0f67f5ae74eddc4f6" -> (known after apply)
+      ~ ip_address             = "10.0.3.122" -> (known after apply)
+      ~ mount_target_dns_name  = "us-east-1c.fs-009dec8cc4770411b.efs.us-east-1.amazonaws.com" -> (known after apply)
+      ~ network_interface_id   = "eni-0eb85ca22ce00a389" -> (known after apply)
+      ~ owner_id               = "763457559801" -> (known after apply)
+        # (3 unchanged attributes hidden)
+    }
+
+  # module.launch_template.aws_launch_template.app_lt must be replaced
++/- resource "aws_launch_template" "app_lt" {
+      ~ arn                                  = "arn:aws:ec2:us-east-1:763457559801:launch-template/lt-0f9bb2296618bfffe" -> (known after apply)
+      ~ default_version                      = 1 -> (known after apply)
+      - description                          = "v2" -> null
+      - disable_api_stop                     = false -> null
+      - disable_api_termination              = false -> null
+      ~ id                                   = "lt-0f9bb2296618bfffe" -> (known after apply)
+      ~ image_id                             = "ami-0b8e82d4253b30093" -> "ami-035dd7fc60ed66665"
+      - key_name                             = "magento-key" -> null
+      ~ latest_version                       = 2 -> (known after apply)
+      ~ name                                 = "magento-app-launch-template" -> (known after apply)
+      + name_prefix                          = "magento-app-lt-" # forces replacement
+      - security_group_names                 = [] -> null
+      - tags                                 = {} -> null
+      ~ tags_all                             = {} -> (known after apply)
+      - vpc_security_group_ids               = [
+          - "sg-09cf837ea2049c0dc",
+        ] -> null
+        # (7 unchanged attributes hidden)
+
+      - iam_instance_profile {
+          - arn  = "arn:aws:iam::763457559801:instance-profile/MagentoAppEC2Role" -> null
+            name = null
+        }
+
+      ~ metadata_options (known after apply)
+    }
+
+  # module.launch_template.aws_launch_template.this will be created
+  + resource "aws_launch_template" "this" {
+      + arn             = (known after apply)
+      + default_version = (known after apply)
+      + id              = (known after apply)
+      + image_id        = "ami-035dd7fc60ed66665"
+      + instance_type   = "t3.medium"
+      + latest_version  = (known after apply)
+      + name            = (known after apply)
+      + name_prefix     = "magento-app-launch-template-"
+      + region          = "us-east-1"
+      + tags_all        = (known after apply)
+        # (1 unchanged attribute hidden)
+
+      + metadata_options (known after apply)
+
+      + network_interfaces {
+          + associate_public_ip_address = "true"
+          + security_groups             = [
+              + "sg-09cf837ea2049c0dc",
+            ]
+        }
+    }
+
+  # module.nlb.aws_lb.this will be updated in-place
+  ~ resource "aws_lb" "this" {
+        id                                                           = "arn:aws:elasticloadbalancing:us-east-1:763457559801:loadbalancer/net/magento-app-nlb/2f3135bb6f3bd957"
+        name                                                         = "magento-app-nlb"
+      ~ tags                                                         = {
+          + "Name" = "magento-app-nlb"
+        }
+      ~ tags_all                                                     = {
+          + "Name" = "magento-app-nlb"
+        }
+        # (18 unchanged attributes hidden)
+
+        # (3 unchanged blocks hidden)
+    }
+
+  # module.nlb.aws_lb_listener.tcp_8080 will be updated in-place
+  ~ resource "aws_lb_listener" "tcp_8080" {
+        id                       = "arn:aws:elasticloadbalancing:us-east-1:763457559801:listener/net/magento-app-nlb/2f3135bb6f3bd957/e96fa2d55103d5ac"
+        tags                     = {}
+        # (8 unchanged attributes hidden)
+
+      ~ default_action {
+            # (3 unchanged attributes hidden)
+
+          - forward {
+              - target_group {
+                  - arn    = "arn:aws:elasticloadbalancing:us-east-1:763457559801:targetgroup/magento-app-nlb-tg/486bb5fe9f639b0d" -> null
+                  - weight = 0 -> null
+                }
+            }
+        }
+    }
+
+  # module.rds.aws_db_instance.this must be replaced
+-/+ resource "aws_db_instance" "this" {
+      ~ address                               = "magento-rds.c4x2mqmga92y.us-east-1.rds.amazonaws.com" -> (known after apply)
+      ~ allocated_storage                     = 200 -> 50
+      + apply_immediately                     = false
+      ~ arn                                   = "arn:aws:rds:us-east-1:763457559801:db:magento-rds" -> (known after apply)
+      ~ availability_zone                     = "us-east-1b" -> (known after apply)
+      ~ backup_retention_period               = 7 -> (known after apply)
+      ~ backup_target                         = "region" -> (known after apply)
+      ~ backup_window                         = "07:29-07:59" -> (known after apply)
+      ~ ca_cert_identifier                    = "rds-ca-rsa2048-g1" -> (known after apply)
+      + character_set_name                    = (known after apply)
+      ~ copy_tags_to_snapshot                 = true -> false
+      - customer_owned_ip_enabled             = false -> null
+      ~ database_insights_mode                = "standard" -> (known after apply)
+      - domain_dns_ips                        = [] -> null
+      + domain_fqdn                           = (known after apply)
+      - enabled_cloudwatch_logs_exports       = [] -> null
+      ~ endpoint                              = "magento-rds.c4x2mqmga92y.us-east-1.rds.amazonaws.com:3306" -> (known after apply)
+      ~ engine_lifecycle_support              = "open-source-rds-extended-support-disabled" -> (known after apply)
+      ~ engine_version                        = "8.0.40" -> "8.0"
+      ~ engine_version_actual                 = "8.0.40" -> (known after apply)
+      ~ hosted_zone_id                        = "Z2R2ITUGPM61AM" -> (known after apply)
+      - iam_database_authentication_enabled   = false -> null
+      ~ id                                    = "db-AKRSOSRG7GIRTNLPZOTDFBHCEM" -> (known after apply)
+      + identifier_prefix                     = (known after apply)
+      ~ iops                                  = 3000 -> (known after apply)
+      ~ kms_key_id                            = "arn:aws:kms:us-east-1:763457559801:key/846e213a-9c2b-4e34-a6c3-82a54d13d52c" -> (known after apply)
+      ~ latest_restorable_time                = "2025-08-08T18:15:00Z" -> (known after apply)
+      ~ license_model                         = "general-public-license" -> (known after apply)
+      ~ listener_endpoint                     = [] -> (known after apply)
+      ~ maintenance_window                    = "fri:04:52-fri:05:22" -> (known after apply)
+      ~ master_user_secret                    = [] -> (known after apply)
+      + master_user_secret_kms_key_id         = (known after apply)
+      - max_allocated_storage                 = 1000 -> null
+      ~ monitoring_interval                   = 60 -> 0
+      ~ monitoring_role_arn                   = "arn:aws:iam::763457559801:role/rds-monitoring-role" -> (known after apply)
+      + nchar_character_set_name              = (known after apply)
+      ~ network_type                          = "IPV4" -> (known after apply)
+      ~ option_group_name                     = "default:mysql-8-0" -> (known after apply)
+      ~ parameter_group_name                  = "default.mysql8.0" -> (known after apply)
+      + password                              = (sensitive value)
+      ~ performance_insights_enabled          = true -> false
+      ~ performance_insights_kms_key_id       = "arn:aws:kms:us-east-1:763457559801:key/846e213a-9c2b-4e34-a6c3-82a54d13d52c" -> (known after apply)
+      ~ performance_insights_retention_period = 7 -> (known after apply)
+      ~ port                                  = 3306 -> (known after apply)
+      + replica_mode                          = (known after apply)
+      ~ replicas                              = [] -> (known after apply)
+      ~ resource_id                           = "db-AKRSOSRG7GIRTNLPZOTDFBHCEM" -> (known after apply)
+      + snapshot_identifier                   = (known after apply)
+      ~ status                                = "available" -> (known after apply)
+      - storage_encrypted                     = true -> null # forces replacement
+      ~ storage_throughput                    = 125 -> (known after apply)
+      ~ storage_type                          = "gp3" -> (known after apply)
+      ~ tags                                  = {
+          + "Application" = "Magento"
+          + "Environment" = "Production"
+          + "Name"        = "magento-rds"
+        }
+      ~ tags_all                              = {
+          + "Application" = "Magento"
+          + "Environment" = "Production"
+          + "Name"        = "magento-rds"
+        }
+      + timezone                              = (known after apply)
+      # Warning: this attribute value will be marked as sensitive and will not
+      # display in UI output after applying this change. The value is unchanged.
+      ~ username                              = (sensitive value)
+        # (21 unchanged attributes hidden)
+    }
+
+  # module.security_groups.aws_security_group.alb_sg will be created
+  + resource "aws_security_group" "alb_sg" {
+      + arn                    = (known after apply)
+      + description            = "Allow HTTP traffic to ALB"
+      + egress                 = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + from_port        = 0
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "-1"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 0
+                # (1 unchanged attribute hidden)
+            },
+        ]
+      + id                     = (known after apply)
+      + ingress                = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + from_port        = 80
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 80
+                # (1 unchanged attribute hidden)
+            },
+        ]
+      + name                   = "ALB-SG"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + region                 = "us-east-1"
+      + revoke_rules_on_delete = false
+      + tags                   = {
+          + "Name" = "ALB-SG"
+        }
+      + tags_all               = {
+          + "Name" = "ALB-SG"
+        }
+      + vpc_id                 = "vpc-097b04327a4c3cbbe"
+    }
+
+  # module.security_groups.aws_security_group.app must be replaced
+-/+ resource "aws_security_group" "app" {
+      ~ arn                    = "arn:aws:ec2:us-east-1:763457559801:security-group/sg-0d05e04f7b4602fff" -> (known after apply)
+      ~ description            = "RDS-SG" -> "Allow traffic from Varnish, EFS, RDS, Bastion" # forces replacement
+      ~ id                     = "sg-0d05e04f7b4602fff" -> (known after apply)
+      ~ ingress                = [
+          - {
+              - cidr_blocks      = []
+              - from_port        = 3306
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = [
+                  - "sg-09cf837ea2049c0dc",
+                ]
+              - self             = false
+              - to_port          = 3306
+                # (1 unchanged attribute hidden)
+            },
+          + {
+              + cidr_blocks      = [
+                  + "10.0.1.0/24",
+                  + "10.0.2.0/24",
+                  + "10.0.3.0/24",
+                ]
+              + from_port        = 3306
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 3306
+                # (1 unchanged attribute hidden)
+            },
+          + {
+              + cidr_blocks      = [
+                  + "10.0.1.0/24",
+                ]
+              + from_port        = 22
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 22
+                # (1 unchanged attribute hidden)
+            },
+          + {
+              + cidr_blocks      = [
+                  + "10.0.1.0/24",
+                ]
+              + from_port        = 443
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 443
+                # (1 unchanged attribute hidden)
+            },
+          + {
+              + cidr_blocks      = [
+                  + "10.0.1.0/24",
+                ]
+              + from_port        = 8080
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 8080
+                # (1 unchanged attribute hidden)
+            },
+          + {
+              + cidr_blocks      = [
+                  + "10.0.1.0/24",
+                ]
+              + from_port        = 80
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 80
+                # (1 unchanged attribute hidden)
+            },
+          + {
+              + cidr_blocks      = [
+                  + "10.0.1.0/24",
+                ]
+              + from_port        = 9200
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 9200
+                # (1 unchanged attribute hidden)
+            },
+          + {
+              + cidr_blocks      = [
+                  + "10.0.2.0/24",
+                  + "10.0.3.0/24",
+                ]
+              + from_port        = 2049
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 2049
+                # (1 unchanged attribute hidden)
+            },
+          + {
+              + cidr_blocks      = [
+                  + "18.214.123.55/32",
+                ]
+              + from_port        = 8080
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 8080
+                # (1 unchanged attribute hidden)
+            },
+        ]
+      ~ name                   = "RDS-SG" -> "app-sg" # forces replacement
+      + name_prefix            = (known after apply)
+      ~ owner_id               = "763457559801" -> (known after apply)
+      + revoke_rules_on_delete = false
+      ~ tags                   = {
+          + "Name" = "App-SG"
+        }
+      ~ tags_all               = {
+          + "Name" = "App-SG"
+        }
+        # (3 unchanged attributes hidden)
+    }
+
+  # module.security_groups.aws_security_group.bastion must be replaced
+-/+ resource "aws_security_group" "bastion" {
+      ~ arn                    = "arn:aws:ec2:us-east-1:763457559801:security-group/sg-045371a5988ca6dab" -> (known after apply)
+      ~ description            = "SSH access from office IP" -> "Allow SSH and 8080 from admin IP" # forces replacement
+      ~ id                     = "sg-045371a5988ca6dab" -> (known after apply)
+      ~ ingress                = [
+          - {
+              - cidr_blocks      = [
+                  - "0.0.0.0/0",
+                ]
+              - description      = "Jenkins"
+              - from_port        = 8080
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 8080
+            },
+          - {
+              - cidr_blocks      = [
+                  - "103.2.234.168/32",
+                ]
+              - description      = "SSH access from office IP"
+              - from_port        = 22
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 22
+            },
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + from_port        = 8080
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 8080
+                # (1 unchanged attribute hidden)
+            },
+          + {
+              + cidr_blocks      = [
+                  + "106.51.80.19/32",
+                ]
+              + from_port        = 22
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 22
+                # (1 unchanged attribute hidden)
+            },
+        ]
+      ~ name                   = "Bastion-SG" -> "bastion-sg" # forces replacement
+      + name_prefix            = (known after apply)
+      ~ owner_id               = "763457559801" -> (known after apply)
+      + revoke_rules_on_delete = false
+      ~ tags                   = {
+          + "Name" = "Bastion-SG"
+        }
+      ~ tags_all               = {
+          + "Name" = "Bastion-SG"
+        }
+        # (3 unchanged attributes hidden)
+    }
+
+  # module.security_groups.aws_security_group.efs must be replaced
+-/+ resource "aws_security_group" "efs" {
+      ~ arn                    = "arn:aws:ec2:us-east-1:763457559801:security-group/sg-0f6ca177cc2116d5f" -> (known after apply)
+      ~ description            = "EFS-SG" -> "Allow NFS from App" # forces replacement
+      ~ id                     = "sg-0f6ca177cc2116d5f" -> (known after apply)
+      ~ ingress                = [
+          - {
+              - cidr_blocks      = []
+              - from_port        = 2049
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = [
+                  - "sg-09cf837ea2049c0dc",
+                ]
+              - self             = false
+              - to_port          = 2049
+                # (1 unchanged attribute hidden)
+            },
+          + {
+              + cidr_blocks      = [
+                  + "10.0.2.0/24",
+                ]
+              + from_port        = 2049
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 2049
+                # (1 unchanged attribute hidden)
+            },
+        ]
+      ~ name                   = "EFS-SG" -> "efs-sg" # forces replacement
+      + name_prefix            = (known after apply)
+      ~ owner_id               = "763457559801" -> (known after apply)
+      + revoke_rules_on_delete = false
+      ~ tags                   = {
+          + "Name" = "EFS-SG"
+        }
+      ~ tags_all               = {
+          + "Name" = "EFS-SG"
+        }
+        # (3 unchanged attributes hidden)
+    }
+
+  # module.security_groups.aws_security_group.rds must be replaced
+-/+ resource "aws_security_group" "rds" {
+      ~ arn                    = "arn:aws:ec2:us-east-1:763457559801:security-group/sg-0d05e04f7b4602fff" -> (known after apply)
+      ~ description            = "RDS-SG" -> "Allow MySQL from App" # forces replacement
+      ~ id                     = "sg-0d05e04f7b4602fff" -> (known after apply)
+      ~ ingress                = [
+          - {
+              - cidr_blocks      = []
+              - from_port        = 3306
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = [
+                  - "sg-09cf837ea2049c0dc",
+                ]
+              - self             = false
+              - to_port          = 3306
+                # (1 unchanged attribute hidden)
+            },
+          + {
+              + cidr_blocks      = [
+                  + "10.0.2.0/24",
+                ]
+              + from_port        = 3306
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 3306
+                # (1 unchanged attribute hidden)
+            },
+        ]
+      ~ name                   = "RDS-SG" -> "rds-sg" # forces replacement
+      + name_prefix            = (known after apply)
+      ~ owner_id               = "763457559801" -> (known after apply)
+      + revoke_rules_on_delete = false
+      ~ tags                   = {
+          + "Name" = "RDS-SG"
+        }
+      ~ tags_all               = {
+          + "Name" = "RDS-SG"
+        }
+        # (3 unchanged attributes hidden)
+    }
+
+  # module.security_groups.aws_security_group.varnish must be replaced
+-/+ resource "aws_security_group" "varnish" {
+      ~ arn                    = "arn:aws:ec2:us-east-1:763457559801:security-group/sg-0bb26111522191e4d" -> (known after apply)
+      ~ description            = "Varnish-SG" -> "Allow all traffic (adjust later)" # forces replacement
+      ~ id                     = "sg-0bb26111522191e4d" -> (known after apply)
+      ~ name                   = "Varnish-SG" -> "varnish-sg" # forces replacement
+      + name_prefix            = (known after apply)
+      ~ owner_id               = "763457559801" -> (known after apply)
+      + revoke_rules_on_delete = false
+      ~ tags                   = {
+          + "Name" = "Varnish-SG"
+        }
+      ~ tags_all               = {
+          + "Name" = "Varnish-SG"
+        }
+        # (4 unchanged attributes hidden)
+    }
+
+  # module.varnish_instance.aws_instance.this must be replaced
+-/+ resource "aws_instance" "this" {
+      ~ arn                                  = "arn:aws:ec2:us-east-1:763457559801:instance/i-06a56d2e6b1267d08" -> (known after apply)
+      ~ availability_zone                    = "us-east-1a" -> (known after apply)
+      ~ disable_api_stop                     = false -> (known after apply)
+      ~ disable_api_termination              = false -> (known after apply)
+      ~ ebs_optimized                        = true -> (known after apply)
+      + enable_primary_ipv6                  = (known after apply)
+      + force_destroy                        = false
+      - hibernation                          = false -> null
+      + host_id                              = (known after apply)
+      + host_resource_group_arn              = (known after apply)
+      + iam_instance_profile                 = (known after apply)
+      ~ id                                   = "i-06a56d2e6b1267d08" -> (known after apply)
+      ~ instance_initiated_shutdown_behavior = "stop" -> (known after apply)
+      + instance_lifecycle                   = (known after apply)
+      ~ instance_state                       = "running" -> (known after apply)
+      ~ ipv6_address_count                   = 0 -> (known after apply)
+      ~ ipv6_addresses                       = [] -> (known after apply)
+      ~ monitoring                           = false -> (known after apply)
+      + outpost_arn                          = (known after apply)
+      + password_data                        = (known after apply)
+      + placement_group                      = (known after apply)
+      ~ placement_partition_number           = 0 -> (known after apply)
+      ~ primary_network_interface_id         = "eni-0831543a6dc4426e2" -> (known after apply)
+      ~ private_dns                          = "ip-10-0-1-181.ec2.internal" -> (known after apply)
+      ~ private_ip                           = "10.0.1.181" -> (known after apply)
+      ~ public_dns                           = "ec2-54-92-201-253.compute-1.amazonaws.com" -> (known after apply)
+      ~ public_ip                            = "54.92.201.253" -> (known after apply)
+      ~ secondary_private_ips                = [] -> (known after apply)
+      ~ security_groups                      = [] -> (known after apply)
+      + spot_instance_request_id             = (known after apply)
+      ~ subnet_id                            = "subnet-07ac857e4cadec4a0" -> "subnet-0e435f008db8b42b6" # forces replacement
+      ~ tags                                 = {
+          ~ "Name" = "Varnish Server" -> "Varnish-Server"
+          + "Role" = "Varnish"
+        }
+      ~ tags_all                             = {
+          ~ "Name" = "Varnish Server" -> "Varnish-Server"
+          + "Role" = "Varnish"
+        }
+      ~ tenancy                              = "default" -> (known after apply)
+      + user_data_base64                     = (known after apply)
+      + user_data_replace_on_change          = false
+      ~ vpc_security_group_ids               = [
+          - "sg-0bb26111522191e4d",
+        ] -> (known after apply)
+        # (7 unchanged attributes hidden)
+
+      ~ capacity_reservation_specification (known after apply)
+      - capacity_reservation_specification {
+          - capacity_reservation_preference = "open" -> null
+        }
+
+      ~ cpu_options (known after apply)
+      - cpu_options {
+          - core_count       = 1 -> null
+          - threads_per_core = 2 -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      - credit_specification {
+          - cpu_credits = "unlimited" -> null
+        }
+
+      ~ ebs_block_device (known after apply)
+
+      ~ enclave_options (known after apply)
+      - enclave_options {
+          - enabled = false -> null
+        }
+
+      ~ ephemeral_block_device (known after apply)
+
+      ~ instance_market_options (known after apply)
+
+      ~ maintenance_options (known after apply)
+      - maintenance_options {
+          - auto_recovery = "default" -> null
+        }
+
+      ~ metadata_options (known after apply)
+      - metadata_options {
+          - http_endpoint               = "enabled" -> null
+          - http_protocol_ipv6          = "disabled" -> null
+          - http_put_response_hop_limit = 2 -> null
+          - http_tokens                 = "required" -> null
+          - instance_metadata_tags      = "disabled" -> null
+        }
+
+      ~ network_interface (known after apply)
+
+      ~ private_dns_name_options (known after apply)
+      - private_dns_name_options {
+          - enable_resource_name_dns_a_record    = false -> null
+          - enable_resource_name_dns_aaaa_record = false -> null
+          - hostname_type                        = "ip-name" -> null
+        }
+
+      ~ root_block_device {
+          ~ device_name           = "/dev/sda1" -> (known after apply)
+          ~ encrypted             = false -> (known after apply)
+          ~ iops                  = 100 -> (known after apply)
+          + kms_key_id            = (known after apply)
+          - tags                  = {} -> null
+          ~ tags_all              = {} -> (known after apply)
+          ~ throughput            = 0 -> (known after apply)
+          ~ volume_id             = "vol-0da059d843baf1131" -> (known after apply)
+          ~ volume_size           = 20 -> 100
+          ~ volume_type           = "gp2" -> "gp3"
+            # (1 unchanged attribute hidden)
+        }
+    }
+
+  # module.vpc_networking.aws_eip.nat_eip will be updated in-place
+  ~ resource "aws_eip" "nat_eip" {
+        id                       = "eipalloc-09384b23a2b579040"
+      ~ tags                     = {
+          + "Name" = "nat-eip"
+        }
+      ~ tags_all                 = {
+          + "Name" = "nat-eip"
+        }
+        # (17 unchanged attributes hidden)
+    }
+
+  # module.vpc_networking.aws_route_table_association.private_app must be replaced
+-/+ resource "aws_route_table_association" "private_app" {
+      ~ id             = "rtbassoc-081829b1abd0445b9" -> (known after apply)
+      ~ subnet_id      = "subnet-0844e1c7c0062ee6f" -> (known after apply) # forces replacement
+        # (3 unchanged attributes hidden)
+    }
+
+  # module.vpc_networking.aws_route_table_association.private_db must be replaced
+-/+ resource "aws_route_table_association" "private_db" {
+      ~ id             = "rtbassoc-002391e32899df090" -> (known after apply)
+      ~ subnet_id      = "subnet-0f1ba7ce386ac9cf9" -> (known after apply) # forces replacement
+        # (3 unchanged attributes hidden)
+    }
+
+  # module.vpc_networking.aws_route_table_association.public_2 must be replaced
+-/+ resource "aws_route_table_association" "public_2" {
+      ~ id             = "rtbassoc-029b59c5032d4b5b4" -> (known after apply)
+      ~ subnet_id      = "subnet-0e435f008db8b42b6" -> (known after apply) # forces replacement
+        # (3 unchanged attributes hidden)
+    }
+
+  # module.vpc_networking.aws_subnet.private_app must be replaced
+-/+ resource "aws_subnet" "private_app" {
+      ~ arn                                            = "arn:aws:ec2:us-east-1:763457559801:subnet/subnet-0844e1c7c0062ee6f" -> (known after apply)
+      ~ availability_zone                              = "us-east-1b" -> "us-east-1a" # forces replacement
+      ~ availability_zone_id                           = "use1-az6" -> (known after apply)
+      - enable_lni_at_device_index                     = 0 -> null
+      ~ id                                             = "subnet-0844e1c7c0062ee6f" -> (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      - map_customer_owned_ip_on_launch                = false -> null
+      ~ owner_id                                       = "763457559801" -> (known after apply)
+      ~ private_dns_hostname_type_on_launch            = "ip-name" -> (known after apply)
+        tags                                           = {
+            "Name" = "Private-App-Subnet"
+        }
+        # (13 unchanged attributes hidden)
+    }
+
+  # module.vpc_networking.aws_subnet.private_db must be replaced
+-/+ resource "aws_subnet" "private_db" {
+      ~ arn                                            = "arn:aws:ec2:us-east-1:763457559801:subnet/subnet-0f1ba7ce386ac9cf9" -> (known after apply)
+      ~ availability_zone                              = "us-east-1c" -> "us-east-1b" # forces replacement
+      ~ availability_zone_id                           = "use1-az1" -> (known after apply)
+      - enable_lni_at_device_index                     = 0 -> null
+      ~ id                                             = "subnet-0f1ba7ce386ac9cf9" -> (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      - map_customer_owned_ip_on_launch                = false -> null
+      ~ owner_id                                       = "763457559801" -> (known after apply)
+      ~ private_dns_hostname_type_on_launch            = "ip-name" -> (known after apply)
+        tags                                           = {
+            "Name" = "Private-DB-Subnet"
+        }
+        # (13 unchanged attributes hidden)
+    }
+
+  # module.vpc_networking.aws_subnet.public_1 will be updated in-place
+  ~ resource "aws_subnet" "public_1" {
+        id                                             = "subnet-07ac857e4cadec4a0"
+      ~ map_public_ip_on_launch                        = false -> true
+      ~ tags                                           = {
+          ~ "Name" = "Public-Subnet" -> "Public-Subnet-1"
+        }
+      ~ tags_all                                       = {
+          ~ "Name" = "Public-Subnet" -> "Public-Subnet-1"
+        }
+        # (19 unchanged attributes hidden)
+    }
+
+  # module.vpc_networking.aws_subnet.public_2 must be replaced
+-/+ resource "aws_subnet" "public_2" {
+      ~ arn                                            = "arn:aws:ec2:us-east-1:763457559801:subnet/subnet-0e435f008db8b42b6" -> (known after apply)
+      ~ availability_zone                              = "us-east-1d" -> "us-east-1b" # forces replacement
+      ~ availability_zone_id                           = "use1-az2" -> (known after apply)
+      - enable_lni_at_device_index                     = 0 -> null
+      ~ id                                             = "subnet-0e435f008db8b42b6" -> (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      - map_customer_owned_ip_on_launch                = false -> null
+      ~ map_public_ip_on_launch                        = false -> true
+      ~ owner_id                                       = "763457559801" -> (known after apply)
+      ~ private_dns_hostname_type_on_launch            = "ip-name" -> (known after apply)
+      ~ tags                                           = {
+          ~ "Name" = "public-subnet-2" -> "Public-Subnet-2"
+        }
+      ~ tags_all                                       = {
+          ~ "Name" = "public-subnet-2" -> "Public-Subnet-2"
+        }
+        # (11 unchanged attributes hidden)
+    }
+
+Plan: 23 to add, 9 to change, 19 to destroy.
